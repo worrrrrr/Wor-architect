@@ -15,7 +15,7 @@ if api_key:
         
         # ปรับชื่อรุ่นให้เป็นมาตรฐานที่ระบบยอมรับแน่นอน
         # ลองใช้ 'gemini-1.5-flash-latest' หรือ 'gemini-pro'
-        model = genai.GenerativeModel('gemini-1.5-flash') 
+        model = genai.GenerativeModel('gemini-pro')
 
         raw_input = st.text_area("โยนความจริงดิบลงในช่อง [The Abyss]:", height=200)
 
