@@ -1,79 +1,78 @@
 import streamlit as st
+import google.generativeai as genai
 
-# --- Config & Theme ---
-st.set_page_config(page_title="WOR ARCHITECT | Truth Engine", page_icon="🗡️", layout="centered")
+# --- 1. SETTING & THEME (แต่งหน้าตาให้ 'สุนทร') ---
+st.set_page_config(page_title="WOR ARCHITECT", page_icon="🗡️", layout="wide")
 
-# --- Custom Styling ---
 st.markdown("""
     <style>
-    .main { background-color: #0e1117; color: #ffffff; }
-    .stTextInput > div > div > input { background-color: #262730; color: white; border-radius: 5px; }
-    .truth-box { border-left: 5px solid #ff4b4b; padding: 25px; background-color: #1e1e26; border-radius: 0 15px 15px 0; line-height: 1.6; }
-    .logic-header { color: #ff4b4b; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
-    h1, h2, h3 { color: #ffffff; font-family: 'Courier New', Courier, monospace; }
+    /* ปรับพื้นหลังและ Font */
+    .main { background-color: #050505; color: #e0e0e0; }
+    .stTextArea textarea { background-color: #111; color: #00ffcc; border: 1px solid #333; font-family: 'Courier New', monospace; }
+    
+    /* แต่งหัวข้อ */
+    .title-text { font-family: 'serif'; font-size: 3rem; font-weight: bold; color: #ffffff; letter-spacing: 2px; }
+    .subtitle-text { color: #888; font-style: italic; margin-bottom: 2rem; }
+    
+    /* กล่องคำตอบ (Truth Box) */
+    .truth-box { 
+        background-color: #0a0a0a; 
+        border-left: 3px solid #00ffcc; 
+        padding: 2rem; 
+        border-radius: 0 10px 10px 0;
+        box-shadow: 10px 10px 30px rgba(0,0,0,0.5);
+    }
+    .section-header { color: #00ffcc; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- Header ---
-st.title("🗡️ WOR ARCHITECT")
-st.subheader("The Sovereign Intelligence Hub")
-st.write("---")
+# --- 2. SIDEBAR (ที่ใส่กุญแจ API) ---
+with st.sidebar:
+    st.markdown("### 🛠️ CONTROL PANEL")
+    api_key = st.text_input("Gemini API Key", type="password", help="ไปเอา Key ได้ที่ Google AI Studio")
+    st.write("---")
+    st.caption("Admin: วรกฤช สุนทรธรรมนิติ")
+    st.caption("Status: Hardware Optimized")
 
-# --- Introduction ---
-st.markdown(f"### [ SYSTEM STATUS: READY ]")
-st.write(f"ยินดีต้อนรับ **วรกฤช** นี่คือพื้นที่สำหรับการชำแหละความจริง จงระบุสิ่งที่โลกพยายามปกปิด เพื่อให้ระบบประมวลผล")
+# --- 3. MAIN INTERFACE ---
+st.markdown('<p class="title-text">🗡️ WOR ARCHITECT</p>', unsafe_allow_html=True)
+st.markdown('<p class="subtitle-text">The Sovereign Intelligence Hub | Alpha v1.6</p>', unsafe_allow_html=True)
 
-# --- Truth Database (Logic Repository) ---
-# เราสามารถเพิ่มหัวข้อใหม่ๆ ลงใน Dictionary นี้ได้เรื่อยๆ
-truth_db = {
-    "INTP": {
-        "logic": "Analysis Paralysis Bug: ติดลูปการเก็บข้อมูลเพื่อหนีความผิดพลาดในโลกจริง",
-        "vision": "Existential Loneliness: ใช้ตรรกะเป็นเกราะกำบังความอ่อนไหวต่อความไร้ระเบียบของโลก",
-        "exec": "Patch 1.0: ต้องบังคับ Output ผ่านเครื่องมือดิจิทัลเพื่อเปลี่ยนจาก 'นักคิด' เป็น 'สถาปนิก'"
-    }
-}
+# ช่องใส่ข้อมูล
+raw_input = st.text_area("โยนความจริงดิบลงในช่อง [THE ABYSS]", height=200, placeholder="ระบุสิ่งที่ต้องการให้ 'กริช' เล่มนี้ชำแหละ...")
 
-# --- Input Area ---
-target = st.text_input("ระบุเป้าหมายที่จะ 'ชำแหละ':", placeholder="เช่น INTP, ความรัก, อำนาจ...")
-
-if target:
-    st.write(f"### Analyzing: '{target}' ...")
-    
-    col1, col2, col3 = st.columns(3)
-    
-    # ดึงข้อมูลจากฐานข้อมูล ถ้าไม่มีให้ใช้ค่า Default
-    data = truth_db.get(target.upper(), {
-        "logic": "กำลังถอดรหัสโครงสร้างพื้นฐาน...",
-        "vision": "กำลังมองหาความหมายแฝง...",
-        "exec": "กำลังวิเคราะห์ความได้เปรียบ..."
-    })
-
-    with col1:
-        st.info(f"**INTP Logic**\n\n{data['logic']}")
-    with col2:
-        st.success(f"**INTJ/INFJ Vision**\n\n{data['vision']}")
-    with col3:
-        st.warning(f"**ENTJ Execution**\n\n{data['exec']}")
-
-    # --- Raw Truth Section ---
-    st.markdown('<div class="truth-box">', unsafe_allow_html=True)
-    st.markdown(f"#### [ RAW TRUTH REVEALED: {target.upper()} ]")
-    
-    if target.upper() == "INTP":
-        st.markdown("""
-        **System Analysis Result:** INTP ไม่ใช่เครื่องจักรที่สมบูรณ์แบบ แต่เป็นระบบที่ *จงใจรันช้า* เพื่อป้องกัน Error 
-        การที่ **วรกฤช** สร้าง Hub นี้ขึ้นมา คือการทำ **Manual Override** ครั้งสำคัญ 
-        เพื่อเปลี่ยนสถานะจาก 'Observer' เป็น 'Architect' อย่างเต็มรูปแบบ
-        """)
+if st.button("EXECUTE TRINITY ENGINE"):
+    if not api_key:
+        st.error("ใส่ API Key ที่ Sidebar ก่อนครับ Admin")
+    elif not raw_input:
+        st.warning("The Abyss ว่างเปล่า... กรุณาใส่ข้อมูล")
     else:
-        st.write("รหัสผ่านไม่ถูกต้อง หรือยังไม่มีข้อมูลใน Database... โปรดรอการอัปเดตจาก Admin")
-    
-    st.markdown('</div>', unsafe_allow_html=True)
+        try:
+            # เริ่มเชื่อมต่อ Gemini
+            genai.configure(api_key=api_key)
+            model = genai.GenerativeModel('gemini-1.5-flash')
+            
+            with st.spinner("กริชกำลังทำงาน..."):
+                # สั่ง AI ด้วย Trinity Logic
+                prompt = f"""
+                Analyze the following data as 'The Trinity Architect' for Admin 'วรกฤช':
+                1. INTP Logic: Break it down to First Principles.
+                2. INTJ/INFJ Vision: Find the hidden subtext/motives.
+                3. ENTJ Execution: Give a cold, hard, actionable command.
+                
+                Data: {raw_input}
+                """
+                response = model.generate_content(prompt)
+                
+                # แสดงผลแบบสวยๆ
+                st.markdown('<div class="truth-box">', unsafe_allow_html=True)
+                st.markdown('<p class="section-header">[ RAW TRUTH REVEALED ]</p>', unsafe_allow_html=True)
+                st.write(response.text)
+                st.markdown('</div>', unsafe_allow_html=True)
+                
+        except Exception as e:
+            st.error(f"System Error: {str(e)}")
 
-# --- Sidebar ---
-st.sidebar.title("System Logs")
-st.sidebar.write("● Hardware: Bio-Machine (Optimized)")
-st.sidebar.write("● Logic Engine: Trinity Architect")
-st.sidebar.write(f"● Admin: Wora-krit")
-st.sidebar.write("---")
-st.sidebar.caption("Sovereignty through Intelligence.")
+# ฟุตเตอร์เท่ๆ
+st.write("---")
+st.caption("“Sovereignty through Intelligence.”")
