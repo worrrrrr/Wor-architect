@@ -1,31 +1,65 @@
 import streamlit as st
-import google.generativeai as genai
 
-st.set_page_config(page_title="The Trinity Architect", layout="wide")
-st.title("🏛️ The Trinity Architect: Alpha v1.5")
+# --- Config & Theme ---
+st.set_page_config(page_title="WOR ARCHITECT | Truth Engine", page_icon="🗡️", layout="centered")
 
-api_key = st.sidebar.text_input("Enter Gemini API Key", type="password")
+# --- Custom Styling ---
+st.markdown("""
+    <style>
+    .main { background-color: #0e1117; color: #ffffff; }
+    .stTextInput > div > div > input { background-color: #262730; color: white; border-radius: 5px; }
+    .truth-box { border-left: 5px solid #ff4b4b; padding: 20px; background-color: #1e1e26; border-radius: 0 10px 10px 0; }
+    h1, h2, h3 { color: #ffffff; font-family: 'Courier New', Courier, monospace; }
+    </style>
+    """, unsafe_allow_html=True)
 
-if api_key:
-    genai.configure(api_key=api_key)
+# --- Header ---
+st.title("🗡️ WOR ARCHITECT")
+st.subheader("The Sovereign Intelligence Hub")
+st.write("---")
+
+# --- Introduction ---
+st.markdown("""
+### [ SYSTEM STATUS: READY ]
+ยินดีต้อนรับ **วรกฤช** นี่คือพื้นที่สำหรับการชำแหละความจริง 
+จงระบุสิ่งที่โลกพยายามปกปิด หรือสมมติฐานที่ไร้ตรรกะ เพื่อให้ระบบประมวลผล
+""")
+
+# --- The Truth Engine Input ---
+target = st.text_input("ระบุเป้าหมายที่จะ 'ชำแหละ' (เช่น ความรัก, อำนาจ, การศึกษา):", placeholder="ใส่หัวข้อที่นี่...")
+
+if target:
+    st.write(f"### Analyzing: '{target}' ...")
     
-    # ไม้ตาย: ลองสุ่มหา Model ที่ใช้ได้จริงใน Key นี้
-    available_models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
-    model_to_use = available_models[0] if available_models else 'models/gemini-1.5-flash'
+    # แบ่งการวิเคราะห์ตามโครงสร้าง Trinity
+    col1, col2, col3 = st.columns(3)
     
-    st.sidebar.write(f"Using Model: {model_to_use}") # โชว์ให้เห็นเลยว่าใช้อะไรอยู่
-    model = genai.GenerativeModel(model_to_use)
+    with col1:
+        st.info("**INTP Logic**\n\nถอดรหัสโครงสร้างพื้นฐานและหา Error ของระบบ")
+        
+    with col2:
+        st.success("**INTJ/INFJ Vision**\n\nมองหาความหมายแฝงและกระแสใต้สำนึก")
+        
+    with col3:
+        st.warning("**ENTJ Execution**\n\nวิเคราะห์ความได้เปรียบและอำนาจ")
 
-    raw_input = st.text_area("โยนความจริงดิบลงในช่อง [The Abyss]:", height=200)
+    # ส่วนการแสดงผล "ความจริงที่เจ็บปวด" (จำลองผลลัพธ์)
+    st.markdown(f"""
+    <div class="truth-box">
+    <h4>[ RAW TRUTH REVEALED ]</h4>
+    <p>กำลังประมวลผลความจริงเกี่ยวกับ <b>{target}</b>... <br>
+    <i>(คำแนะนำ: นำคำวิเคราะห์จาก AI คู่หูของคุณมาวางที่นี่เพื่อบันทึกเป็นฐานข้อมูล)</i></p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    if st.button("RUN TRINITY ENGINE"):
-        if raw_input:
-            with st.spinner("กำลังเจาะทะลวงความลวง..."):
-                try:
-                    prompt = f"คุณคือ The Trinity Architect (INTP, INFJ, ENTJ) ชำแหละสิ่งนี้: {raw_input}"
-                    response = model.generate_content(prompt)
-                    st.markdown(response.text)
-                except Exception as e:
-                    st.error(f"เกิดข้อผิดพลาด: {e}")
-else:
-    st.info("กรุณาใส่ API Key")
+# --- Sidebar Logs ---
+st.sidebar.title("System Logs")
+st.sidebar.write("* Hardware: Bio-Machine (Optimized)")
+st.sidebar.write("* Logic Engine: Trinity Architect")
+st.sidebar.write("* Admin: Wora-krit")
+
+if st.sidebar.button("Clear Cache"):
+    st.rerun()
+
+st.sidebar.write("---")
+st.sidebar.caption("Sovereignty through Intelligence.")
