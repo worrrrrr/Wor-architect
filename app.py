@@ -50,8 +50,13 @@ if st.button("EXECUTE TRINITY ENGINE"):
         try:
             # เริ่มเชื่อมต่อ Gemini
             genai.configure(api_key=api_key)
-            model = genai.GenerativeModel('gemini-1.5-flash')
             
+            # ค้นหาชื่อ Model ที่ใช้งานได้จริงในเครื่องคุณขณะนั้น
+            models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
+            target_model = 'models/gemini-1.5-flash' if 'models/gemini-1.5-flash' in models else models[0]
+            
+            model = genai.GenerativeModel(target_model)
+            st.sidebar.caption(f"Active Model: {target_model}")
             with st.spinner("กริชกำลังทำงาน..."):
                 # สั่ง AI ด้วย Trinity Logic
                 prompt = f"""
